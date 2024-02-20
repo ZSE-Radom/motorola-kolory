@@ -1,0 +1,59 @@
+@font-face {
+    font-family: 'MPLUSRounded1c';
+    src: url('./assets/MPLUSRounded1c-Medium.ttf');
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+body {
+    overflow: hidden;
+    font-family: 'MPLUSRounded1c', sans-serif;
+    display: flex;
+    font-size: 2rem;
+    padding: 1vh 1vw;
+    height: 100vh;
+    background-color: #E2D5ED;
+    color: #7A5698;
+}
+
+#left {
+    width: 30vw;
+}
+
+#right {
+    width: 70vw;
+}
+
+#centered {
+    padding: 1vh 1vw;
+    margin: auto;
+    text-align: center;
+}
+
+#colorInput {
+    margin-bottom: 20px;
+}
+
+.colorBox {
+    display: inline-block;
+    width: 100px;
+    height: 100px;;
+}
+
+.harmony_content:nth-child(2) {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.harmony_content:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+#harmonies {
+    overflow-y: scroll;
+    height: 100vh;
+}
