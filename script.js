@@ -1,10 +1,21 @@
 const colorInput = document.getElementById('colorInput');
+const preview = document.getElementById('preview');
 const harmoniesDiv = document.getElementById('harmonies');
 
-colorInput.addEventListener('input', updateColorHarmonies);
+colorInput.addEventListener('input', updateApp);
 
-function updateColorHarmonies() {
+const hue = document.getElementById('hue');
+const saturation = document.getElementById('saturation');
+const lightness = document.getElementById('lightness');
+
+hue.addEventListener('input', updateHsl);
+saturation.addEventListener('input', updateHsl);
+lightness.addEventListener('input', updateHsl);
+
+function updateApp() {
     const selectedColor = colorInput.value;
+
+    updateColorType(selectedColor);
 
     const harmonies = getColorHarmonies(selectedColor);
     
@@ -14,9 +25,35 @@ function updateColorHarmonies() {
         const harmonyDiv = document.createElement('div');
         harmonyDiv.classList.add('harmony_content');
 
+        const heading = document.createElement('div');
+        heading.classList.add('harmony_heading');
+
         const harmonyTitle = document.createElement('h3');
         harmonyTitle.textContent = harmony.name;
-        harmonyDiv.appendChild(harmonyTitle);
+        heading.appendChild(harmonyTitle);
+
+        const harmonyCopyButton = document.createElement('button');
+        harmonyCopyButton.textContent = 'Kopiuj';
+        harmonyCopyButton.classList.add('copyButton');
+        harmonyCopyButton.addEventListener('click', () => {
+            navigator.clipboard.writeText(harmony.colors.join(', '));
+        });
+
+        heading.appendChild(harmonyCopyButton);
+
+        const harmonyPreviewButton = document.createElement('button');
+        harmonyPreviewButton.textContent = 'Podgląd';
+        harmonyPreviewButton.addEventListener('click', () => {
+            preview.style.display = 'visible';
+            //to będzie robić coś innego, zostawcie
+        
+            colorInput.value = harmony.colors[1];
+            updateApp();
+        });
+
+        heading.appendChild(harmonyPreviewButton);
+
+        harmonyDiv.appendChild(heading);
 
         harmony.colors.forEach(color => {
             const colorBox = document.createElement('div');
@@ -30,7 +67,6 @@ function updateColorHarmonies() {
 }
 
 function getColorHarmonies(color) {
-    // Convert hex color to RGB
     const hexToRgb = (hex) => hex.match(/\w\w/g).map(x => parseInt(x, 16));
     const rgbToHex = (r, g, b) => '#' + [r, g, b].map(x => {
         const hex = x.toString(16);
@@ -39,7 +75,6 @@ function getColorHarmonies(color) {
 
     const [r, g, b] = hexToRgb(color);
 
-    // Harmonies
     const harmonies = [
         {
             name: "Kontrastowy",
@@ -132,4 +167,194 @@ function getColorHarmonies(color) {
     ];
 
     return harmonies;
+}
+
+/* konwersja typu koloru */
+
+function hslToHtml(hsl) {
+    let h = hsl[0];
+    let s = hsl[1];
+    let l = hsl[2];
+    const k = n => (n + h / 30) % 12;
+    const a = s * Math.min(l, 1 - l);
+    const f = n =>
+      l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+    return [255 * f(0), 255 * f(8), 255 * f(4)];
+}
+
+function htmlToHsl(htmlCode) {
+    let r = parseInt(htmlCode.substring(1, 3), 16) / 255;
+    let g = parseInt(htmlCode.substring(3, 5), 16) / 255;
+    let b = parseInt(htmlCode.substring(5, 7), 16) / 255;
+    let max = Math.max(r, g, b);
+    let min = Math.min(r, g, b);
+    let h = (max + min) / 2;
+    let s = (max + min) / 2;
+    let l = (max + min) / 2;
+    if (max === min) {
+        h = s = 0;
+    }
+    else {
+        let d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+    return [h, s, l];
+}
+
+function htmlToRgb(htmlCode) {
+    let r = parseInt(htmlCode.substring(1, 3), 16) / 255;
+    let g = parseInt(htmlCode.substring(3, 5), 16) / 255;
+    let b = parseInt(htmlCode.substring(5, 7), 16) / 255;
+    return [r, g, b];
+}
+
+function rgbToCmy(rgb) {
+    return rgb.map(color => 1 - color);
+}
+
+function rgbToCmyk(rgb) {
+    let cmy = rgbToCmy(rgb);
+    let k = Math.min(...cmy);
+    if (k === 1) return [0, 0, 0, 1];
+    return cmy.map(color => (color - k) / (1 - k)).concat(k);
+}
+
+function rgbToXyz(rgb) {
+    let r = rgb[0];
+    let g = rgb[1];
+    let b = rgb[2];
+
+    r = r > 0.04045 ? Math.pow((r + 0.055) / 1.055, 2.4) : r / 12.92;
+    g = g > 0.04045 ? Math.pow((g + 0.055) / 1.055, 2.4) : g / 12.92;
+    b = b > 0.04045 ? Math.pow((b + 0.055) / 1.055, 2.4) : b / 12.92;
+
+    r *= 100;
+    g *= 100;
+    b *= 100;
+
+    let x = r * 0.4124 + g * 0.3576 + b * 0.1805;
+    let y = r * 0.2126 + g * 0.7152 + b * 0.0722;
+    let z = r * 0.0193 + g * 0.1192 + b * 0.9505;
+
+    return [x, y, z];
+}
+
+function rgbToLab(rgb) {
+    let xyz = rgbToXyz(rgb);
+
+    let whiteX = 95.047;
+    let whiteY = 100.0;
+    let whiteZ = 108.883;
+
+    let x = xyz[0] / whiteX;
+    let y = xyz[1] / whiteY;
+    let z = xyz[2] / whiteZ;
+
+    x = x > 0.008856 ? Math.pow(x, 1/3) : (7.787 * x) + (16/116);
+    y = y > 0.008856 ? Math.pow(y, 1/3) : (7.787 * y) + (16/116);
+    z = z > 0.008856 ? Math.pow(z, 1/3) : (7.787 * z) + (16/116);
+
+    let l = (116 * y) - 16;
+    let a = 500 * (x - y);
+    let b = 200 * (y - z);
+
+    return [l, a, b];
+}
+
+function rgbToLuv(rgb) {
+    let xyz = rgbToXyz(rgb);
+
+    let whiteX = 95.047;
+    let whiteY = 100.0;
+    let whiteZ = 108.883;
+
+    let uprime = 4 * xyz[0] / (xyz[0] + 15 * xyz[1] + 3 * xyz[2]);
+    let vprime = 9 * xyz[1] / (xyz[0] + 15 * xyz[1] + 3 * xyz[2]);
+
+    let uprime_n = 4 * whiteX / (whiteX + 15 * whiteY + 3 * whiteZ);
+    let vprime_n = 9 * whiteY / (whiteX + 15 * whiteY + 3 * whiteZ);
+
+    let yr = xyz[1] / 100;
+    let l = yr > 0.008856 ? 116 * Math.pow(yr, 1/3) - 16 : 903.3 * yr;
+
+    let u = 13 * l * (uprime - uprime_n);
+    let v = 13 * l * (vprime - vprime_n);
+
+    return [l, u, v];
+}
+
+function rgbToYuv(rgb) {
+    let r = rgb[0];
+    let g = rgb[1];
+    let b = rgb[2];
+
+    let y = 0.299 * r + 0.587 * g + 0.114 * b;
+    let u = -0.14713 * r - 0.28886 * g + 0.436 * b;
+    let v = 0.615 * r - 0.51499 * g - 0.10001 * b;
+
+    return [y, u, v];
+}
+
+function rgbToYiq(rgb) {
+    let r = rgb[0];
+    let g = rgb[1];
+    let b = rgb[2];
+
+    let y = 0.299 * r + 0.587 * g + 0.114 * b;
+    let i = 0.596 * r - 0.274 * g - 0.322 * b;
+    let q = 0.211 * r - 0.523 * g + 0.312 * b;
+
+    return [y, i, q];
+}
+
+function updateColorType(color) {
+    let rgb = htmlToRgb(color);
+    let hsl = htmlToHsl(color);
+    let cmy = rgbToCmy(rgb);
+    let cmyk = rgbToCmyk(rgb);
+    let xyz = rgbToXyz(rgb);
+    let lab = rgbToLab(rgb);
+    let luv = rgbToLuv(rgb);
+    let yuv = rgbToYuv(rgb);
+    let yiq = rgbToYiq(rgb);
+    let x = document.getElementById("clrs");
+    x.innerHTML = `
+    <div class="clr_system">
+        <h3>RGB</h3>
+        <p>R: ${rgb[0] * 255}</p>
+        <p>G: ${rgb[1] * 255}</p>
+        <p>B: ${rgb[2] * 255}</p>
+    </div>
+    <div class="clr_system">
+        <h3>CMY</h3>
+        <p>C: ${(cmy[0] * 100).toFixed(2)}%</p>
+        <p>M: ${(cmy[1] * 100).toFixed(2)}%</p>
+        <p>Y: ${(cmy[2] * 100).toFixed(2)}%</p>
+    </div>
+    <div class="clr_system">
+        <h3>CMYK</h3>
+        <p>C: ${(cmyk[0] * 100).toFixed(2)}%</p>
+        <p>M: ${(cmyk[1] * 100).toFixed(2)}%</p>
+        <p>Y: ${(cmyk[2] * 100).toFixed(2)}%</p>
+        <p>K: ${(cmyk[3] * 100).toFixed(2)}%</p>
+    </div>
+    `
+    hue.value = hsl[0] * 360;
+    saturation.value = hsl[1] * 100;
+    lightness.value = hsl[2] * 100;
+}
+
+function updateHsl() {
+    let h = hue.value;
+    let s = saturation.value;
+    let l = lightness.value;
+    let x = hslToHtml([h, s/100, l/100]);
+    colorInput.value = `#${Math.round(x[0]).toString(16)}${Math.round(x[1]).toString(16)}${Math.round(x[2]).toString(16)}`
+    updateApp();
 }

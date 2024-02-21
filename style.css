@@ -6,14 +6,13 @@
 * {
     box-sizing: border-box;
     margin: 0;
+    transition: all 0.3s;
 }
 
 body {
     overflow: hidden;
     font-family: 'MPLUSRounded1c', sans-serif;
-    display: flex;
     font-size: 2rem;
-    padding: 1vh 1vw;
     height: 100vh;
     background-color: #E2D5ED;
     color: #7A5698;
@@ -56,4 +55,63 @@ body {
 #harmonies {
     overflow-y: scroll;
     height: 100vh;
+}
+
+button {
+    font-family: 'MPLUSRounded1c', sans-serif;
+    color: #E2D5ED;
+    background-color: #7A5698;
+    padding: 10px 24px;
+    cursor: pointer;
+    border: 1px solid #E2D5ED;
+    border-radius: 10px;
+}
+
+.btn-group button {
+    float: left;
+}
+  
+.btn-group:after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.btn-group button:hover {
+    background-color: #7A5698;
+}
+
+.harmony_heading {
+    display: flex;
+}
+
+.harmony_heading h2 {
+    margin-left: auto;
+}
+
+.harmony_heading .copyButton {
+    margin-left: auto;
+}
+
+.preview {
+    z-index: 100;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: #E2D5ED;
+    color: #7A5698;
+}
+
+#mainApp {
+    display: flex;
+    padding: 1vh 1vw;
+    width: 100vw;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 1vh 1vw;
 }

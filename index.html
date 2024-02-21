@@ -3,20 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Harmonies</title>
+    <title>Kolory ZSE</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="left">
-        <h1>Kolory ZSE</h1>
-        <div id="centered">
-        <h1>Podstawowy kolor</h1>
-        <h3>Wybierz swój podstawowy kolor</h3>
-        <input type="color" id="colorInput">
+    <div id="mainApp">
+        <div id="left">
+            <h1>Kolory ZSE</h1>
+            <div id="centered">
+            <h2>Podstawowy kolor</h2>
+            <div class="btn-group" style="width:100%">
+                <button style="width:50%" onclick="switchColorSelector()">HSL</button>
+                <button style="width:50%" onclick="switchColorSelector()">Sys. picker</button>
+            </div>
+            <div id="colorPicker" class="c1">
+                <input type="range" id="hue" min="0" max="358">
+                <input type="range" id="saturation" min="0" max="100">
+                <input type="range" id="lightness" min="0" max="100">
+            </div>
+            <input type="color" id="colorInput" class="c2">
+            </div>
+            <div id="knobs">
+
+            </div>
+            <div id="systems">
+                <p>twój kolor w innych systemach kolorów</p>
+                <div id="clrs"></div>
+            </div>
+        </div>
+        <div id="right">
+            <div id="harmonies"></div>
         </div>
     </div>
-    <div id="right">
-        <div id="harmonies"></div>
+    <div class="preview" id="preview">
+        <div class="topbar">
+            <h1>Podgląd</h1>
+            <button onclick="this.parentNode.parentNode.style.display = 'none'">X</button>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
