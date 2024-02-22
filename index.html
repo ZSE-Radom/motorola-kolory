@@ -7,9 +7,17 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="top">
+        <h1>Kolory ZSE</h1>
+        <!--Będę to zmieniać jutro uwu
+            te przyciski będą dynamicznie po bokach
+        -->
+        <button onclick="switchCard('left')">Wybór kolorów</button>
+        <button onclick="switchCard('right')">Kompozycje</button>
+        <button onclick="switchCard('preview')">Podglądy</button>
+    </div>
     <div id="mainApp">
-        <div id="left">
-            <h1>Kolory ZSE</h1>
+        <div id="left" class="card">
             <div id="centered">
             <h2>Podstawowy kolor</h2>
             <div class="btn-group" style="width:100%">
@@ -28,17 +36,47 @@
             </div>
             <div id="systems">
                 <p>twój kolor w innych systemach kolorów</p>
-                <div id="clrs"></div>
+                <div id="clrs" style="display: flex; justify-content: space-between;  flex-wrap: wrap;"></div>
             </div>
         </div>
-        <div id="right">
-            <div id="harmonies"></div>
+        <div id="right" class="card">
+            <div id="harmonies">
+                <h1 style="margin: 0;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">Najpierw wybierz podstawowy kolor</h1>
+            </div>
         </div>
-    </div>
-    <div class="preview" id="preview">
-        <div class="topbar">
-            <h1>Podgląd</h1>
-            <button onclick="this.parentNode.parentNode.style.display = 'none'">X</button>
+        <div class="preview card" id="preview">
+            <div class="topbar">
+                <h1>Podgląd</h1>
+                <button>Eksport</button>
+            </div>
+            <div style="overflow-x: scroll;">
+                <div id="vectorIcons" class="pr">
+                    <div class="dd" style="mask: url('./assets/svgrepo.com/crown-svgrepo-com.svg') no-repeat center"></div>
+                    <div class="dd" style="mask: url('./assets/svgrepo.com/cube-alt-1-svgrepo-com.svg') no-repeat center"></div>
+                    <div class="dd" style="mask: url('./assets/svgrepo.com/fingerprint-svgrepo-com.svg') no-repeat center"></div>
+                    <div class="dd" style="mask: url('./assets/svgrepo.com/table-alt-svgrepo-com.svg') no-repeat center"></div>
+                    <div class="dd" style="mask: url('./assets/svgrepo.com/letter-chinese-a-svgrepo-com.svg') no-repeat center"></div>
+                </div>
+                <div id="website" class="pr">
+                    <div id="header">
+                        <h1>Strona internetowa</h1>
+                        <h3>Podtytuł</h3>
+                    </div>
+                </div>
+                <div id="bizcard" class="pr">
+                    <h3>Imię i nazwisko</h3>
+                    <h1>Mikołaj Patynowski</h1>
+                    <h3>Stanowisko</h3>
+                    <h1>Nikt</h1>
+                </div>
+                <div id="slideshow" class="pr">
+
+                </div> 
+                <div id="abstract" class="pr">
+
+                </div>
+                </div>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>

@@ -1,3 +1,5 @@
+let currentColors = [];
+
 const colorInput = document.getElementById('colorInput');
 const preview = document.getElementById('preview');
 const harmoniesDiv = document.getElementById('harmonies');
@@ -45,10 +47,8 @@ function updateApp() {
         harmonyPreviewButton.textContent = 'Podgląd';
         harmonyPreviewButton.addEventListener('click', () => {
             preview.style.display = 'visible';
-            //to będzie robić coś innego, zostawcie
-        
-            colorInput.value = harmony.colors[1];
-            updateApp();
+            currentColors = harmony.colors;
+            previewsRefresh();
         });
 
         heading.appendChild(harmonyPreviewButton);
@@ -357,4 +357,51 @@ function updateHsl() {
     let x = hslToHtml([h, s/100, l/100]);
     colorInput.value = `#${Math.round(x[0]).toString(16)}${Math.round(x[1]).toString(16)}${Math.round(x[2]).toString(16)}`
     updateApp();
+}
+
+function switchCard(t) {
+    var x = document.getElementsByClassName("card");
+    for (var i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+    }
+    document.getElementById(t).style.display = "block";
+}
+
+function previewsRefresh() {
+    const vectorIcons = document.getElementById('vectorIcons');
+    for (let i = 0; i < vectorIcons.children.length; i++) {
+        vectorIcons.children[i].style.backgroundColor = currentColors[i];
+    }
+}
+
+function exportJson() {
+    const json = JSON.stringify(currentColors);
+    const blob = new Blob([json], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = window.URL.createObjectURL(blob);
+    a.download = 'uwukolorki.json';
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(a.href);
+    document.body.removeChild(a);
+}
+
+function importJson() {
+    /*   do wrzucenia w html
+         <input type="file" id="fileInput" accept=".json">
+         <button onclick="loadJson()">wczytaj</button>
+    */
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+      const jsonString = event.target.result;
+      const jsonArray = JSON.parse(jsonString);
+      currentColors = jsonArray;
+    };
+
+    reader.readAsText(file);
+    
 }

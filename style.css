@@ -19,11 +19,12 @@ body {
 }
 
 #left {
-    width: 30vw;
+    width: 100vw;
 }
 
 #right {
-    width: 70vw;
+    display: none;
+    width: 100vw;
 }
 
 #centered {
@@ -94,10 +95,8 @@ button {
 }
 
 .preview {
-    z-index: 100;
-    position: absolute;
+    display: none;
     width: 100vw;
-    height: 100vh;
     margin: 0;
     padding: 0;
     background-color: #E2D5ED;
@@ -114,4 +113,23 @@ button {
     display: flex;
     justify-content: space-between;
     padding: 1vh 1vw;
+}
+
+#vectorIcons {
+    display: flex;
+    justify-content: space-between;
+    padding: 1vh 1vw;
+}
+
+.pr {
+    display: flex;
+    justify-content: space-between;
+    padding: 1vh 1vw;
+    width: 80%;
+    height: 40%;
+}
+
+.dd {
+    height: 200px;
+    width: 200px;
 }
