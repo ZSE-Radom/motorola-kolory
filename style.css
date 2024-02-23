@@ -3,6 +3,15 @@
     src: url('./assets/MPLUSRounded1c-Medium.ttf');
 }
 
+:root {
+    --color1: #7A5698;
+    --color2: #E2D5ED;
+    --color3: #F4E1D2;
+    --color4: #F4D9C6;
+    --color5: #F4C6D9;
+    --color6: #F4D9D2;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -19,7 +28,8 @@ body {
 }
 
 #left {
-    width: 100vw;
+    width: 80vw;
+    margin: 0 10vw;
 }
 
 #right {
@@ -124,12 +134,106 @@ button {
 .pr {
     display: flex;
     justify-content: space-between;
+    margin: 2vh 0;
     padding: 1vh 1vw;
     width: 80%;
     height: 40%;
+    border-radius: 20px;
 }
 
 .dd {
     height: 200px;
     width: 200px;
+    background-color: --color1;
+}
+
+#top {
+    display: flex;
+    padding: 1vh 1vw;
+    width: 100vw;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.ddr {
+    pointer-events: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: absolute;
+    z-index: 999;
+    width: 100vw;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+}
+  
+.ddt {
+    display: flex;
+    flex-direction: column;
+    margin: auto 0;
+}
+
+#btl {
+    pointer-events: initial;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: none;
+    font-size: 2.5rem;
+    display: none;
+}
+
+#btr {
+    pointer-events: initial;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+    font-size: 2.5rem;
+}
+
+.s {
+    -webkit-appearance: none;
+    height: 15px;
+    border-radius: 5px;  
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+  }
+  
+  .s::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%; 
+    background: #7A5698;
+    cursor: pointer;
+  }
+  
+  .s::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #7A5698;
+    cursor: pointer;
+  }
+
+#bizcard {
+    background-color: var(--color3);
+    color: var(--color1);
+}
+
+#bizcard h1 {
+    color: var(--color2);
+}
+
+#bizcard h3 {
+    color: var(--color4);
+}
+
+#website {
+    background-color: var(--color5);
+    color: var(--color1);
 }

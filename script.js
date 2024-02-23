@@ -67,6 +67,7 @@ function updateApp() {
 }
 
 function getColorHarmonies(color) {
+    // z dupy to te kolory bierze a nie liczy
     const hexToRgb = (hex) => hex.match(/\w\w/g).map(x => parseInt(x, 16));
     const rgbToHex = (r, g, b) => '#' + [r, g, b].map(x => {
         const hex = x.toString(16);
@@ -215,10 +216,12 @@ function htmlToRgb(htmlCode) {
 }
 
 function rgbToCmy(rgb) {
+    // działa poprawnie (chyba)
     return rgb.map(color => 1 - color);
 }
 
 function rgbToCmyk(rgb) {
+    // działa poprawnie (chyba)
     let cmy = rgbToCmy(rgb);
     let k = Math.min(...cmy);
     if (k === 1) return [0, 0, 0, 1];
@@ -226,6 +229,7 @@ function rgbToCmyk(rgb) {
 }
 
 function rgbToXyz(rgb) {
+    // nie działa poprawnie (chyba)
     let r = rgb[0];
     let g = rgb[1];
     let b = rgb[2];
@@ -246,6 +250,7 @@ function rgbToXyz(rgb) {
 }
 
 function rgbToLab(rgb) {
+    // stestowane i o dziwo działa poprawnie (chyba)
     let xyz = rgbToXyz(rgb);
 
     let whiteX = 95.047;
@@ -268,6 +273,7 @@ function rgbToLab(rgb) {
 }
 
 function rgbToLuv(rgb) {
+    // jako tako działa (chyba)
     let xyz = rgbToXyz(rgb);
 
     let whiteX = 95.047;
@@ -290,6 +296,7 @@ function rgbToLuv(rgb) {
 }
 
 function rgbToYuv(rgb) {
+    // nie działa poprawnie (chyba)
     let r = rgb[0];
     let g = rgb[1];
     let b = rgb[2];
@@ -302,13 +309,14 @@ function rgbToYuv(rgb) {
 }
 
 function rgbToYiq(rgb) {
+    // za ciemne
     let r = rgb[0];
     let g = rgb[1];
     let b = rgb[2];
 
-    let y = 0.299 * r + 0.587 * g + 0.114 * b;
-    let i = 0.596 * r - 0.274 * g - 0.322 * b;
-    let q = 0.211 * r - 0.523 * g + 0.312 * b;
+    let y = 29.9 * r + 58.7 * g + 11.4 * b;
+    let i = 59.6 * r - 27.4 * g - 32.2 * b;
+    let q = 21.1 * r - 52.3 * g + 31.2 * b;
 
     return [y, i, q];
 }
@@ -344,7 +352,38 @@ function updateColorType(color) {
         <p>Y: ${(cmyk[2] * 100).toFixed(2)}%</p>
         <p>K: ${(cmyk[3] * 100).toFixed(2)}%</p>
     </div>
+    <div class="clr_system">
+        <h3>XYZ</h3>
+        <p>X: ${xyz[0].toFixed(2)}</p>
+        <p>Y: ${xyz[1].toFixed(2)}</p>
+        <p>Z: ${xyz[2].toFixed(2)}</p>
+    </div>
+    <div class="clr_system">
+        <h3>LAB</h3>
+        <p>L: ${lab[0].toFixed(2)}</p>
+        <p>A: ${lab[1].toFixed(2)}</p>
+        <p>B: ${lab[2].toFixed(2)}</p>
+    </div>
+    <div class="clr_system">
+        <h3>LUV</h3>
+        <p>L: ${luv[0].toFixed(2)}</p>
+        <p>U: ${luv[1].toFixed(2)}</p>
+        <p>V: ${luv[2].toFixed(2)}</p>
+    </div>
+    <div class="clr_system">
+        <h3>YUV</h3>
+        <p>Y: ${yuv[0].toFixed(2)}</p>
+        <p>U: ${yuv[1].toFixed(2)}</p>
+        <p>V: ${yuv[2].toFixed(2)}</p>
+    </div>
+    <div class="clr_system">
+        <h3>YIQ</h3>
+        <p>Y: ${yiq[0].toFixed(2)}</p>
+        <p>I: ${yiq[1].toFixed(2)}</p>
+        <p>Q: ${yiq[2].toFixed(2)}</p>
+    </div>
     `
+
     hue.value = hsl[0] * 360;
     saturation.value = hsl[1] * 100;
     lightness.value = hsl[2] * 100;
@@ -368,6 +407,22 @@ function switchCard(t) {
 }
 
 function previewsRefresh() {
+    //currentColors zawiera kolory które mamy sprawdzać, kolorów ma być 6 jak jest mniej to zapętlamy kolory w tablicy
+    let root = document.documentElement;
+    let colors = currentColors;
+
+    if (colors.length < 6) {
+        let i = 0;
+        while (colors.length < 6) {
+            colors.push(colors[i]);
+            i++;
+        }
+    }
+
+    for (let i = 0; i < 6; i++) {
+        root.style.setProperty(`--color${i + 1}`, colors[i]);
+    }
+
     const vectorIcons = document.getElementById('vectorIcons');
     for (let i = 0; i < vectorIcons.children.length; i++) {
         vectorIcons.children[i].style.backgroundColor = currentColors[i];
@@ -391,6 +446,7 @@ function importJson() {
     /*   do wrzucenia w html
          <input type="file" id="fileInput" accept=".json">
          <button onclick="loadJson()">wczytaj</button>
+         Naprawdę to wrzucę przysięgam
     */
     const fileInput = document.getElementById('fileInput');
     const file = fileInput.files[0];
@@ -404,4 +460,49 @@ function importJson() {
 
     reader.readAsText(file);
     
+}
+
+function switchColorSelector(x) {
+    if (x.id == 'xxu1') {
+        document.getElementsByClassName('c1')[0].style.display = 'block';
+        document.getElementsByClassName('c2')[0].style.display = 'none';
+    } else {
+        document.getElementsByClassName('c1')[0].style.display = 'none';
+        document.getElementsByClassName('c2')[0].style.display = 'block';
+    }
+}
+
+function buttonChange(x) {
+    l = document.getElementById('btl');
+    r = document.getElementById('btr');
+    if (x === 1) {
+        l.style.display = 'none';
+        r.style.display = 'block';
+        r.textContent = 'Kompozycje';
+        r.addEventListener('click', () => {
+            switchCard('right'); 
+            buttonChange(2);
+        });
+    } else if (x === 2) {
+        l.style.display = 'block';
+        l.textContent = 'Wybór kolorów';
+        l.addEventListener('click', () => {
+            switchCard('left'); 
+            buttonChange(1);
+        });
+        r.style.display = 'block';
+        r.textContent = 'Podglądy';
+        r.addEventListener('click', () => {
+            switchCard('preview'); 
+            buttonChange(3);
+        });
+    } else if (x === 3) {
+        l.style.display = 'block';
+        l.textContent = 'Kompozycje';
+        l.addEventListener('click', () => {
+            switchCard('right'); 
+            buttonChange(2);
+        });
+        r.style.display = 'none';
+    }
 }

@@ -8,28 +8,34 @@
 </head>
 <body>
     <div id="top">
+        <div>
         <h1>Kolory ZSE</h1>
-        <!--Będę to zmieniać jutro uwu
-            te przyciski będą dynamicznie po bokach
-        -->
-        <button onclick="switchCard('left')">Wybór kolorów</button>
-        <button onclick="switchCard('right')">Kompozycje</button>
-        <button onclick="switchCard('preview')">Podglądy</button>
+        <p>Wybierz kolor, a otrzymasz perfekcyjne dopełnienia!</p>
+        </div>
+        <button onclick="importJson()">Wczytaj swoją kompozycję...</button>
     </div>
+    <div class="ddr">
+        <div class="ddt">
+          <button onclick="switchCard('left'); buttonChange(1)" id="btl">Wybór kolorów</button>
+        </div>
+        <div class="ddt">
+          <button onclick="switchCard('right'); buttonChange(2)" id="btr">Kompozycje</button>
+        </div>
+      </div>
     <div id="mainApp">
         <div id="left" class="card">
             <div id="centered">
             <h2>Podstawowy kolor</h2>
             <div class="btn-group" style="width:100%">
-                <button style="width:50%" onclick="switchColorSelector()">HSL</button>
-                <button style="width:50%" onclick="switchColorSelector()">Sys. picker</button>
+                <button style="width:50%" onclick="switchColorSelector(this)" id="xxu1">HSL</button>
+                <button style="width:50%" onclick="switchColorSelector(this)" id="xxu2">Sys. picker</button>
             </div>
             <div id="colorPicker" class="c1">
-                <input type="range" id="hue" min="0" max="358">
-                <input type="range" id="saturation" min="0" max="100">
-                <input type="range" id="lightness" min="0" max="100">
+                <input class='s' type="range" id="hue" min="0" max="358">
+                <input class='s' type="range" id="saturation" min="0" max="100">
+                <input class='s' type="range" id="lightness" min="0" max="100">
             </div>
-            <input type="color" id="colorInput" class="c2">
+            <input type="color" id="colorInput" class="c2" hidden>
             </div>
             <div id="knobs">
 
@@ -45,9 +51,10 @@
             </div>
         </div>
         <div class="preview card" id="preview">
+            <!-- dobrać lepsze kolory do podglądów-->
             <div class="topbar">
                 <h1>Podgląd</h1>
-                <button>Eksport</button>
+                <button onclick="exportJson()">Eksport</button>
             </div>
             <div style="overflow-x: scroll;">
                 <div id="vectorIcons" class="pr">
