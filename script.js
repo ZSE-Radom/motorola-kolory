@@ -422,11 +422,6 @@ function previewsRefresh() {
     for (let i = 0; i < 6; i++) {
         root.style.setProperty(`--color${i + 1}`, colors[i]);
     }
-
-    const vectorIcons = document.getElementById('vectorIcons');
-    for (let i = 0; i < vectorIcons.children.length; i++) {
-        vectorIcons.children[i].style.backgroundColor = currentColors[i];
-    }
 }
 
 function exportJson() {
