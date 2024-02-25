@@ -9,6 +9,7 @@ colorInput.addEventListener('input', updateApp);
 const hue = document.getElementById('hue');
 const saturation = document.getElementById('saturation');
 const lightness = document.getElementById('lightness');
+const angle = document.getElementById('angle');
 
 hue.addEventListener('input', updateHsl);
 saturation.addEventListener('input', updateHsl);
@@ -53,12 +54,12 @@ function updateApp() {
 
         heading.appendChild(harmonyPreviewButton);
 
-        harmonyDiv.appendChild(heading);
+        harmonyDiv.appendChild(heading);    
 
         harmony.colors.forEach(color => {
             const colorBox = document.createElement('div');
             colorBox.classList.add('colorBox');
-            colorBox.style.backgroundColor = color;
+            colorBox.style.backgroundColor = `hsl( ${color[0]}, ${color[1]}%, ${color[2]}% )`;
             harmonyDiv.appendChild(colorBox);
         });
         
@@ -66,6 +67,7 @@ function updateApp() {
     });
 }
 
+/* ta funkcja jak najbardziej liczyła dopełnienia ale wcale to nie było zrobione poprawnie ani dobrze 
 function getColorHarmonies(color) {
     // z dupy to te kolory bierze a nie liczy
     const hexToRgb = (hex) => hex.match(/\w\w/g).map(x => parseInt(x, 16));
@@ -168,20 +170,59 @@ function getColorHarmonies(color) {
     ];
 
     return harmonies;
+}*/
+
+// hsl color harmony calculator
+function getColorHarmonies(color) {
+    const hexToRgb = (hex) => hex.match(/\w\w/g).map(x => parseInt(x, 16));
+    const rgbToHex = (r, g, b) => '#' + [r, g, b].map(x => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+    }).join('');
+
+    const [h, s, l] = htmlToHsl(color);
+    //allow user to change angle of the color wheel
+    const angle = angle.value;
+
+    const harmonies = [
+        {
+            name: "Analogiczny",
+            colors: [
+                hslToHtmlHsl([h, s, l]),
+                hslToHtmlHsl([h + angle, s, l]),
+                hslToHtmlHsl([h - angle, s, l])
+            ]
+        },
+        {
+            name: "Kontrastowy",
+            colors: [
+                hslToHtmlHsl([h, s, l]),
+                hslToHtmlHsl([h + 180, s, l])
+            ]
+        },
+    ];    
+    return harmonies;
 }
 
 /* konwersja typu koloru */
 
-function hslToHtml(hsl) {
+function hslToHtmlHsl(hsl) {
     let h = hsl[0];
     let s = hsl[1];
     let l = hsl[2];
+    return [h, s, l];
+}
+
+function hslToHtml(hsl) {
+    let h = hsl[0] / 360;
+    let s = hsl[1] / 100;
+    let l = hsl[2] / 100;
     const k = n => (n + h / 30) % 12;
     const a = s * Math.min(l, 1 - l);
     const f = n =>
-      l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-    return [255 * f(0), 255 * f(8), 255 * f(4)];
-}
+        l - a * Math.max(Math.min(k(n) - 3, 9 - k(n), 1), -1);
+    return [f(0) * 255, f(8) * 255, f(4) * 255];
+};
 
 function htmlToHsl(htmlCode) {
     let r = parseInt(htmlCode.substring(1, 3), 16) / 255;
@@ -205,7 +246,7 @@ function htmlToHsl(htmlCode) {
         }
         h /= 6;
     }
-    return [h, s, l];
+    return [h*360, s*100, l*100];
 }
 
 function htmlToRgb(htmlCode) {
@@ -384,16 +425,16 @@ function updateColorType(color) {
     </div>
     `
 
-    hue.value = hsl[0] * 360;
-    saturation.value = hsl[1] * 100;
-    lightness.value = hsl[2] * 100;
+    hue.value = hsl[0];
+    saturation.value = hsl[1];
+    lightness.value = hsl[2];
 }
 
 function updateHsl() {
     let h = hue.value;
     let s = saturation.value;
     let l = lightness.value;
-    let x = hslToHtml([h, s/100, l/100]);
+    let x = hslToHtml([h*360, s, l]);
     colorInput.value = `#${Math.round(x[0]).toString(16)}${Math.round(x[1]).toString(16)}${Math.round(x[2]).toString(16)}`
     updateApp();
 }
@@ -420,7 +461,7 @@ function previewsRefresh() {
     }
 
     for (let i = 0; i < 6; i++) {
-        root.style.setProperty(`--color${i + 1}`, colors[i]);
+        root.style.setProperty(`--color${i + 1}: hsl(${colors[i][0]} ${colors[i][1]}% ${colors[i][2]}%);`);
     }
 }
 

@@ -110,9 +110,9 @@ button {
     overflow-x: hidden;
     overflow-y: scroll;
     display: none;
-    width: 100vw;
-    height: 70vh;
-    margin: 0 0 0 20vw;
+    width: 80vw;
+    height: 100vh;
+    margin: 0 10vw;
     padding: 0;
     background-color: #E2D5ED;
     color: #7A5698;
