@@ -66,6 +66,7 @@ body {
 
 #harmonies {
     overflow-y: scroll;
+    margin-left: 5vw;
     height: 100vh;
 }
 
@@ -106,10 +107,12 @@ button {
 }
 
 .preview {
+    overflow-x: hidden;
     overflow-y: scroll;
     display: none;
     width: 100vw;
-    margin: 0;
+    height: 70vh;
+    margin: 0 0 0 20vw;
     padding: 0;
     background-color: #E2D5ED;
     color: #7A5698;
