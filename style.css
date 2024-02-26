@@ -107,6 +107,7 @@ button {
 	padding: 0;
 	background-color: #e2d5ed;
 	color: #7a5698;
+	padding-bottom: 200px;
 }
 
 #mainApp {
@@ -220,14 +221,19 @@ button {
 #bizcard {
 	background-color: var(--color3);
 	color: var(--color1);
-}
-
-#bizcard h1 {
-	color: var(--color2);
+	display: flex;
+	flex-direction: column;
 }
 
 #bizcard h3 {
 	color: var(--color4);
+}
+#bizcard h4 {
+	color: var(--color4);
+}
+
+#bizcard h2 {
+	color: var(--color2);
 }
 
 #website {
@@ -251,6 +257,89 @@ button {
 }
 
 #website nav ul {
+	padding: 10px;
+}
+#website nav ul{
 	list-style-type: none;
 	padding: 0;
+	display: flex;
+}
+#website nav ul li{
+	list-style-type: none;
+	padding: 10px;
+	display: flex;
+}
+#website nav ul a{
+	text-decoration: none;
+	color: var(--color1);
+}
+#website .cs2{
+	color: var(--color2);
+}
+#slideshow{
+	background: var(--color1);
+	display: flex;
+	flex-direction: column;
+}
+#slideshow h1{
+	color: var(--color2);
+}
+#slideshow h5{
+	color: var(--color6);
+}
+
+#slideshow div{
+	display: flex;
+}
+#abstract{
+	height: 400px;
+	background-color: var(--color5);
+	position: relative;
+	overflow:hidden;
+}
+#abstract::before{
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 50%;
+	height: 400px;
+	background-color: var(--color6);
+	-webkit-transform:  skew(37deg, 0deg);
+	-moz-transform:  skew(37deg, 0deg);
+	-ms-transform:  skew(37deg, 0deg);
+	-o-transform:  skew(37deg, 0deg);
+	transform:  skew(37deg, 0deg);
+}
+#abstract #ab1{
+	position: absolute;
+	top: 0;
+	left: 60%;
+	width: 50%;
+	height: 400px;
+	background-color: var(--color4);
+	-webkit-transform:  skew(-74deg, 0deg);
+	-moz-transform:  skew(-74deg, 0deg);
+	-ms-transform:  skew(-74deg, 0deg);
+	-o-transform:  skew(-74deg, 0deg);
+	transform:  skew(-74deg, 0deg);
+
+}
+#abstract #ab2{
+	position: absolute;
+	top: 30%;
+	left: 60%;
+	width: 100px;
+	height: 100px;
+	background-color: var(--color6);
+	border-radius: 50%;
+}
+#abstract #ab3{
+	position: absolute;
+	top: 50%;
+	left: 70%;
+	width: 150px;
+	height: 150px;
+	background-color: var(--color4);
+	border-radius: 50%;
 }
