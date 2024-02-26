@@ -35,7 +35,7 @@ function updateApp() {
 		harmonyTitle.textContent = harmony.name;
 		heading.appendChild(harmonyTitle);
 
-		const harmonyCopyButton = document.createElement("button");
+        const harmonyCopyButton = document.createElement("button");
 		harmonyCopyButton.textContent = "Kopiuj";
 		harmonyCopyButton.classList.add("copyButton");
 		harmonyCopyButton.addEventListener("click", () => {
@@ -43,6 +43,15 @@ function updateApp() {
 		});
 
 		heading.appendChild(harmonyCopyButton);
+
+		const harmonySystemsColor = document.createElement("button");
+		harmonySystemsColor.textContent = "Systemy kolorów";
+		harmonySystemsColor.classList.add("systemsButton");
+		harmonySystemsColor.addEventListener("click", () => {
+			popUpSystems(harmony.colors);
+		});
+
+		heading.appendChild(harmonySystemsColor);
 
 		const harmonyPreviewButton = document.createElement("button");
 		harmonyPreviewButton.textContent = "Podgląd";
@@ -186,21 +195,64 @@ function getColorHarmonies(color) {
 
 	const [h, s, l] = htmlToHsl(color);
 	//allow user to change angle of the color wheel
-	const selected_angle = angle?.value ?? 30;
+	const selected_angle = parseFloat(angle?.value) ?? 30;
 
 	const harmonies = [
+        {
+            name: "Monochromatyczny",
+            colors: [
+                hslToHtmlHsl([h, s, l]),
+            ],
+        },
 		{
-			name: "Analogiczny",
+			name: "Analogiczny 🗿",
 			colors: [
 				hslToHtmlHsl([h, s, l]),
 				hslToHtmlHsl([h + selected_angle, s, l]),
 				hslToHtmlHsl([h - selected_angle, s, l]),
 			],
 		},
+        {
+			name: "Analogiczny z dopełnieniem 🗿",
+			colors: [
+				hslToHtmlHsl([h, s, l]),
+				hslToHtmlHsl([h + selected_angle, s, l]),
+				hslToHtmlHsl([h - selected_angle, s, l]),
+                hslToHtmlHsl([h + 180, s, l]),
+			],
+		},
 		{
 			name: "Kontrastowy",
-			colors: [hslToHtmlHsl([h, s, l]), hslToHtmlHsl([h + 180, s, l])],
+			colors: [
+                hslToHtmlHsl([h, s, l]),
+                hslToHtmlHsl([h + 180, s, l])],
 		},
+        {
+            name: "Miękki kontrast 🗿",
+            colors: [
+                hslToHtmlHsl([h, s, l]), 
+                hslToHtmlHsl([h + (180 + selected_angle), s, l]),
+                hslToHtmlHsl([h + (180 - selected_angle), s, l]),
+            ],
+        },
+        {
+            name: "Podwójny kontrast 🗿",
+            colors: [
+                hslToHtmlHsl([h, s, l]),
+                hslToHtmlHsl([h + selected_angle, s, l]),
+                hslToHtmlHsl([h + 180, s, l]),
+                hslToHtmlHsl([h + (180 + selected_angle), s, l]),
+            ],
+        },
+        {
+            name: "Triada 🗿",
+            colors: [
+                hslToHtmlHsl([h, s, l]),
+                hslToHtmlHsl([h + selected_angle, s, l]),
+                hslToHtmlHsl([h + (180 + selected_angle), s, l]),
+            ],
+        },
+
 	];
 	return harmonies;
 }
@@ -367,9 +419,15 @@ function rgbToYiq(rgb) {
 	return [y, i, q];
 }
 
-function updateColorType(color) {
-	let rgb = htmlToRgb(color);
-	let hsl = htmlToHsl(color);
+function updateColorType(color, prm = "rgb") {
+    let rgb, hsl;
+    if (prm === "rgb") {
+	    rgb = htmlToRgb(color);
+	    hsl = htmlToHsl(color);
+    } else {
+        hsl = color;
+        rgb = hslToHtml(color);
+    }
 	let cmy = rgbToCmy(rgb);
 	let cmyk = rgbToCmyk(rgb);
 	let xyz = rgbToXyz(rgb);
@@ -377,7 +435,15 @@ function updateColorType(color) {
 	let luv = rgbToLuv(rgb);
 	let yuv = rgbToYuv(rgb);
 	let yiq = rgbToYiq(rgb);
-	let x = document.getElementById("clrs");
+
+    let x;
+
+    if (prm === "rgb") {
+        x = document.getElementById("clrs");
+    } else {
+        x = document.getElementById("popcolors");
+    }
+
 	x.innerHTML = `
     <div class="clr_system">
         <h3>RGB</h3>
@@ -549,4 +615,22 @@ function buttonChange(x) {
 		});
 		r.style.display = "none";
 	}
+}
+
+function popUpSystems(colors) {
+    console.log(colors)
+    document.getElementById("popup").style.display = "block";
+    const popupContent = document.getElementById("popcolors");
+    popupContent.innerHTML = "";
+    colors.forEach((color) => {
+        const colorBox = document.createElement("div");
+        colorBox.classList.add("colorBox");
+        colorBox.style.backgroundColor = color;
+        popupContent.appendChild(colorBox);
+    });
+
+}
+
+function closePopup() {
+    document.getElementById("popup").style.display = "none";
 }

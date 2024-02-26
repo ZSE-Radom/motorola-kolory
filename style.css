@@ -107,7 +107,6 @@ button {
 	padding: 0;
 	background-color: #e2d5ed;
 	color: #7a5698;
-	padding-bottom: 200px;
 }
 
 #mainApp {
@@ -159,7 +158,7 @@ button {
 	flex-direction: row;
 	justify-content: space-between;
 	position: absolute;
-	z-index: 999;
+	z-index: 2;
 	width: 100vw;
 	top: 0;
 	bottom: 0;
@@ -228,12 +227,21 @@ button {
 #bizcard h3 {
 	color: var(--color4);
 }
+
 #bizcard h4 {
 	color: var(--color4);
 }
 
+#bizcard h1 {
+	color: var(--color2);
+}
+
 #bizcard h2 {
 	color: var(--color2);
+}
+
+#bizcard h3 {
+	color: var(--color4);
 }
 
 #website {
@@ -259,31 +267,38 @@ button {
 #website nav ul {
 	padding: 10px;
 }
-#website nav ul{
+
+#website nav ul {
 	list-style-type: none;
 	padding: 0;
 	display: flex;
 }
+
 #website nav ul li{
 	list-style-type: none;
 	padding: 10px;
 	display: flex;
 }
+
 #website nav ul a{
 	text-decoration: none;
 	color: var(--color1);
 }
+
 #website .cs2{
 	color: var(--color2);
 }
+
 #slideshow{
 	background: var(--color1);
 	display: flex;
 	flex-direction: column;
 }
+
 #slideshow h1{
 	color: var(--color2);
 }
+
 #slideshow h5{
 	color: var(--color6);
 }
@@ -291,12 +306,14 @@ button {
 #slideshow div{
 	display: flex;
 }
+
 #abstract{
 	height: 400px;
 	background-color: var(--color5);
 	position: relative;
 	overflow:hidden;
 }
+
 #abstract::before{
 	content: '';
 	position: absolute;
@@ -311,6 +328,7 @@ button {
 	-o-transform:  skew(37deg, 0deg);
 	transform:  skew(37deg, 0deg);
 }
+
 #abstract #ab1{
 	position: absolute;
 	top: 0;
@@ -325,6 +343,7 @@ button {
 	transform:  skew(-74deg, 0deg);
 
 }
+
 #abstract #ab2{
 	position: absolute;
 	top: 30%;
@@ -334,6 +353,7 @@ button {
 	background-color: var(--color6);
 	border-radius: 50%;
 }
+
 #abstract #ab3{
 	position: absolute;
 	top: 50%;
@@ -342,4 +362,24 @@ button {
 	height: 150px;
 	background-color: var(--color4);
 	border-radius: 50%;
+}
+
+#popup {
+	display: block;
+	position: fixed;
+	z-index: 3;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+#popupContent {
+	background-color: #fefefe;
+	margin: 15% auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%;
 }

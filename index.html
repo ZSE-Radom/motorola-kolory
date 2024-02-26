@@ -12,7 +12,6 @@
         <h1>Kolory ZSE</h1>
         <p>Wybierz kolor, a otrzymasz perfekcyjne dopełnienia!</p>
         </div>
-        <input type="file" id="fileInput" accept=".json">
         <button onclick="importJson()">Wczytaj swoją kompozycję...</button>
     </div>
     <div class="ddr">
@@ -22,7 +21,7 @@
         <div class="ddt">
           <button onclick="switchCard('right'); buttonChange(2)" id="btr">Kompozycje</button>
         </div>
-      </div>
+    </div>
     <div id="mainApp">
         <div id="left" class="card">
             <div id="centered">
@@ -32,14 +31,11 @@
                 <button style="width:50%" onclick="switchColorSelector(this)" id="xxu2">Sys. picker</button>
             </div>
             <div id="colorPicker" class="c1">
-                <input class='s' type="range" id="hue" min="0" max="358">
-                <input class='s' type="range" id="saturation" min="0" max="100">
-                <input class='s' type="range" id="lightness" min="0" max="100">
+                <input class='s' type="range" id="hue" min="1" max="359">
+                <input class='s' type="range" id="saturation" min="1" max="99">
+                <input class='s' type="range" id="lightness" min="1" max="99">
             </div>
             <input type="color" id="colorInput" class="c2" hidden>
-            </div>
-            <div id="knobs">
-
             </div>
             <div id="systems">
                 <p>twój kolor w innych systemach kolorów</p>
@@ -47,6 +43,10 @@
             </div>
         </div>
         <div id="right" class="card">
+            <div id="angle_parent">
+                <p>Wybierz kąt który zostanie zastosowany w harmoniach oznaczonych 🗿</p>
+                <input type="range" id="angle" min="0" max="90" value="30" onchange="updateApp()">
+            </div>
             <div id="harmonies">
                 <h1 style="margin: 0;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">Najpierw wybierz podstawowy kolor</h1>
             </div>
@@ -99,9 +99,12 @@
                     <main>
                         <h2 class="cs2">Main Content Area</h2>
                         <p class="cs2">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                        <h2>Main Content Area</h2>
+                        <p>This is where your main content goes.</p>
                     </main>
                     <footer>
                         <p class="cs2">&copy; 2024 Colorful Website. All rights reserved.</p>
+                        <p>&copy; 2024 Colorful Website. All rights reserved.</p>
                     </footer>
                 </div>
                 <p>Identyfikacja wizualna</p>
@@ -114,16 +117,20 @@
                                 <path fill="var(--color2)" d="M10,12.503c-4.418,0-7.878,2.058-7.878,4.685c0,0.288,0.231,0.52,0.52,0.52c0.287,0,0.519-0.231,0.519-0.52c0-1.976,3.132-3.646,6.84-3.646c3.707,0,6.838,1.671,6.838,3.646c0,0.288,0.234,0.52,0.521,0.52s0.52-0.231,0.52-0.52C17.879,14.561,14.418,12.503,10,12.503z"></path>
                             </svg>
                         </div>
-                        <div>
+                    <div>
                         <h4>Imię i nazwisko:</h4>
                         <h4>Stanowisko:</h4>
                         
-                        </div>
-                        <div>
+                    <h3>Imię i nazwisko</h3>
+                    <h1>Mikołaj Patynowski</h1>
+                    </div>
+                    <div>
                         
                         <h3>Mikołaj Patynowski</h3>
                         <h3>Nikt</h3>
                         </div> 
+                    <h3>Stanowisko</h3>
+                    <h1>Nikt</h1>
                     </div>
                 </div>
                 <p>Prezentacja multimedialna</p>
@@ -147,6 +154,14 @@
                 </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div id='popup'>
+        <div id="popupContent">
+            <h1>Twoje kolory w różnych systemach kolorów</h1>
+            <div id="popcolors"></div>
+            <button onclick="importJson()">Zapisz te informacje</button>
+            <button onclick="closePopup()">Zamknij okienko</button>
         </div>
     </div>
     <script src="script.js"></script>
