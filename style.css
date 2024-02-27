@@ -37,6 +37,36 @@ body {
 
 #colorInput {
 	margin-bottom: 20px;
+	width: 200px;
+	height: 40px;
+	border: 0;
+	padding: 0;
+	margin-top: 30px;
+	margin-left: auto;
+	margin-right: auto;
+	cursor: pointer;
+}
+.primiry-color-examples-container{
+	display: flex;
+	padding-top: 30px;
+	justify-content: space-around;
+	padding-left: 30px;
+	padding-right: 30px;
+
+}
+.primiry-color-examples{
+	width: 80px;
+	height: 40px;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: 0.2s all;
+	border: 1px solid #666;
+}
+.primiry-color-examples:hover{
+	width: 84px;
+	margin-left: -2px;
+	margin-right: -2px;
+
 }
 
 .colorBox {
@@ -59,7 +89,8 @@ body {
 	overflow-y: scroll;
 	margin-left: 5vw;
 	height: 100vh;
-}
+	padding-bottom: 350px;
+} 
 
 button {
 	font-family: "MPLUSRounded1c", sans-serif;
@@ -107,6 +138,7 @@ button {
 	padding: 0;
 	background-color: #e2d5ed;
 	color: #7a5698;
+	padding-bottom: 250px;
 }
 
 #mainApp {

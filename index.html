@@ -39,6 +39,16 @@
                 <input class='s' type="range" id="saturation" min="1" max="99">
                 <input class='s' type="range" id="lightness" min="1" max="99">
             </div>
+            <div class="c2 primiry-color-examples-container" style="display: none;">
+                <div onclick="updateApp('#ff0000')" style="background-color: #ff0000;" class="primiry-color-examples"></div>
+                <div onclick="updateApp('#008000')" style="background-color: #008000;" class="primiry-color-examples"></div>
+                <div onclick="updateApp('#ffff00')" style="background-color: #ffff00;" class="primiry-color-examples"></div>
+                <div onclick="updateApp('#0000ff')" style="background-color: #0000ff;" class="primiry-color-examples"></div>
+                <div onclick="updateApp('#ffc0cb')" style="background-color: #ffc0cb;" class="primiry-color-examples"></div>
+                <div onclick="updateApp('#800080')" style="background-color: #800080;" class="primiry-color-examples"></div>
+                <div onclick="updateApp('#a52a2a')" style="background-color: #a52a2a;" class="primiry-color-examples"></div>
+                <div onclick="updateApp('#5c2e19')" style="background-color: #5c2e19;" class="primiry-color-examples"></div>
+            </div>
             <input type="color" id="colorInput" class="c2" hidden>
             </div>
             <div id="systems">
@@ -55,11 +65,12 @@
                 <h1 style="margin: 0;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">Najpierw wybierz podstawowy kolor</h1>
             </div>
         </div>
-        <div class="card" id="preview">
-            <div id="tohide">
-                <h1 style="margin: 0;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">Najpierw naciśnij 'Podgląd' przy jakiejś harmonii!</h1>
-            </div>           
-            <div id="toshow">
+        <div class=" card" id="preview">
+            <div>
+                <div id="tohide">
+                    <h1 style="margin: 0;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">Najpierw naciśnij 'Podgląd' przy jakiejś harmonii!</h1>
+                </div>           
+                <div id="toshow">
                 <!-- dobrać lepsze kolory do podglądów-->
                 <div class="topbar">
                     <h1>Podgląd</h1>

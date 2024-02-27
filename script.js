@@ -16,8 +16,16 @@ hue.addEventListener("input", updateHsl);
 saturation.addEventListener("input", updateHsl);
 lightness.addEventListener("input", updateHsl);
 
-function updateApp() {
-	const selectedColor = colorInput.value;
+function updateApp(x) {
+
+ 	let selectedColor = ''
+	
+ 	if (typeof(x) == 'object'){
+ 		selectedColor = colorInput.value;
+ 	} else {
+ 		selectedColor = x;
+ 	}
+	
 	validateHsl()
 
 	updateColorType(selectedColor);
@@ -556,33 +564,36 @@ function exportJson() {
 }
 
 function importJson() {
-    var input = document.createElement('input');
-    input.type = 'file';
+	var input = document.createElement('input');
+	input.type = 'file';
 
-    input.onchange = e => { 
-        const file = e.target.files[0]; 
-        const reader = new FileReader();
+	input.onchange = e => { 
+		const file = e.target.files[0]; 
+		const reader = new FileReader();
 
-        reader.onload = function (event) {
-            const jsonString = event.target.result;
-            const jsonArray = JSON.parse(jsonString);
-            currentColors = jsonArray;
+		reader.onload = function (event) {
+			const jsonString = event.target.result;
+			const jsonArray = JSON.parse(jsonString);
+			currentColors = jsonArray;
             console.log(currentColors);
 			colorInput.value = `#${Math.round(currentColors[0][0]).toString(16)}${Math.round(currentColors[0][1]).toString(16)}${Math.round(currentColors[0][2]).toString(16)}`;
-        };
-    
-        reader.readAsText(file);
-    }
-    input.click();
-}
+		};
+	
+		reader.readAsText(file);
 
+
+	}
+	input.click();
+}
 function switchColorSelector(x) {
 	if (x.id == "xxu1") {
 		document.getElementsByClassName("c1")[0].style.display = "block";
 		document.getElementsByClassName("c2")[0].style.display = "none";
+		document.getElementsByClassName("c2")[1].style.display = "none";
 	} else {
 		document.getElementsByClassName("c1")[0].style.display = "none";
-		document.getElementsByClassName("c2")[0].style.display = "block";
+		document.getElementsByClassName("c2")[0].style.display = "flex";
+		document.getElementsByClassName("c2")[1].style.display = "block";
 	}
 }
 
