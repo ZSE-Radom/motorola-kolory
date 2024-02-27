@@ -1,4 +1,5 @@
 let currentColors = [];
+let exportColors = [];
 
 const colorInput = document.getElementById("colorInput");
 const preview = document.getElementById("preview");
@@ -17,6 +18,7 @@ lightness.addEventListener("input", updateHsl);
 
 function updateApp() {
 	const selectedColor = colorInput.value;
+	validateHsl()
 
 	updateColorType(selectedColor);
 
@@ -76,111 +78,6 @@ function updateApp() {
 		harmoniesDiv.appendChild(harmonyDiv);
 	});
 }
-
-/* ta funkcja jak najbardziej liczyła dopełnienia ale wcale to nie było zrobione poprawnie ani dobrze 
-function getColorHarmonies(color) {
-    // z dupy to te kolory bierze a nie liczy
-    const hexToRgb = (hex) => hex.match(/\w\w/g).map(x => parseInt(x, 16));
-    const rgbToHex = (r, g, b) => '#' + [r, g, b].map(x => {
-        const hex = x.toString(16);
-        return hex.length === 1 ? '0' + hex : hex;
-    }).join('');
-
-    const [r, g, b] = hexToRgb(color);
-
-    const harmonies = [
-        {
-            name: "Kontrastowy",
-            colors: [
-                color,
-                rgbToHex(r, g, 255 - b)
-            ]
-        },
-        {
-            name: "Miękko kontrastowy",
-            colors: [
-                color,
-                rgbToHex(255 - r, g, b),
-                rgbToHex(r, g, 255 - b)
-            ]
-        },
-        {
-            name: "Podwójny kontrast",
-            colors: [
-                color,
-                rgbToHex(255 - r, 255 - g, b),
-                rgbToHex(255 - r, g, 255 - b)
-            ]
-        },
-        {
-            name: "Triada",
-            colors: [
-                color,
-                rgbToHex(255 - r, 255 - g, b),
-                rgbToHex(r, 255 - g, 255 - b)
-            ]
-        },
-        {
-            name: "Tetrada",
-            colors: [
-                color,
-                rgbToHex(255 - r, g, b),
-                rgbToHex(r, 255 - g, b),
-                rgbToHex(255 - r, 255 - g, 255 - b)
-            ]
-        },
-        {
-            name: "Pięciotonowy",
-            colors: [
-                color,
-                rgbToHex(255 - r, g, 255 - b),
-                rgbToHex(255 - r, b, 255 - g),
-                rgbToHex(r, 255 - g, 255 - b),
-                rgbToHex(r, g, 255 - b)
-            ]
-        },
-        {
-            name: "Sześciotonowy",
-            colors: [
-                color,
-                rgbToHex(255 - r, g, 255 - b),
-                rgbToHex(255 - r, b, 255 - g),
-                rgbToHex(r, 255 - g, 255 - b),
-                rgbToHex(r, g, 255 - b),
-                rgbToHex(r, 255 - b, 255 - g)
-            ]
-        },
-        {
-            name: "Siedmiotonowy",
-            colors: [
-                color,
-                rgbToHex(255 - r, g, 255 - b),
-                rgbToHex(255 - r, b, 255 - g),
-                rgbToHex(r, 255 - g, 255 - b),
-                rgbToHex(r, g, 255 - b),
-                rgbToHex(r, 255 - b, 255 - g),
-                rgbToHex(255 - r, 255 - g, b)
-            ]
-        },
-        {
-            name: "Neutralny",
-            colors: [
-                color,
-                rgbToHex(255 - r, 255 - g, 255 - b)
-            ]
-        },
-        {
-            name: "Analogiczny",
-            colors: [
-                color,
-                rgbToHex(r, g, 255 - b),
-                rgbToHex(r, g, b)
-            ]
-        }
-    ];
-
-    return harmonies;
-}*/
 
 // hsl color harmony calculator
 function getColorHarmonies(color) {
@@ -477,6 +374,12 @@ function updateColorType(color, prm = "rgb") {
 	let yiq = rgbToYiq(rgb);
 
     let y =  `
+	<div class="clr_system">
+	<h3>HSL</h3>
+		<p>H: ${hsl[0].toFixed(2)}</p>
+		<p>S: ${hsl[1].toFixed(2)}%</p>
+		<p>L: ${hsl[2].toFixed(2)}%</p>
+	</div>
     <div class="clr_system">
         <h3>RGB</h3>
         <p>R: ${rgb[0] * 255}</p>
@@ -531,10 +434,22 @@ function updateColorType(color, prm = "rgb") {
     if (prm === "rgb") {
         x = document.getElementById("clrs");
         x.innerHTML = y;
-    } else {
+		exportColors.push({'color': {
+			'rgb': [rgb[0] * 255, rgb[1] * 255, rgb[2] * 255],
+			'hsl': [hsl[0], hsl[1], hsl[2]],
+			//wkleić
+		}})
+    } else if (prm === "hsl") {
         x = document.getElementById("popcolors");
-        x.innerHTML += y;
-    }
+        x.innerHTML += `<div><div class="xcolorbox" style="background-color: rgb(${rgb[0] * 255}, ${rgb[1] * 255}, ${rgb[2] * 255})"></div><div class="xrx">` + y + `</div></div>`;
+		exportColors.push({'color': {
+			'rgb': [rgb[0] * 255, rgb[1] * 255, rgb[2] * 255],
+			'hsl': [hsl[0], hsl[1], hsl[2]],
+			//wkleić
+		}})
+    } else {
+
+	}
 
 	hue.value = hsl[0];
 	saturation.value = hsl[1];
@@ -581,7 +496,7 @@ function previewsRefresh() {
 }
 
 function exportJson() {
-	const json = JSON.stringify(currentColors);
+	const json = JSON.stringify(exportColors);
 	const blob = new Blob([json], { type: "application/json" });
 	const a = document.createElement("a");
 	a.style.display = "none";
@@ -594,22 +509,24 @@ function exportJson() {
 }
 
 function importJson() {
-	/*   do wrzucenia w html
-         <input type="file" id="fileInput" accept=".json">
-         <button onclick="loadJson()">wczytaj</button>
-         Naprawdę to wrzucę przysięgam
-    */
-	const fileInput = document.getElementById("fileInput");
-	const file = fileInput.files[0];
-	const reader = new FileReader();
+	var input = document.createElement('input');
+	input.type = 'file';
 
-	reader.onload = function (event) {
-		const jsonString = event.target.result;
-		const jsonArray = JSON.parse(jsonString);
-		currentColors = jsonArray;
-	};
+	input.onchange = e => { 
+		const file = e.target.files[0]; 
+		const reader = new FileReader();
 
-	reader.readAsText(file);
+		reader.onload = function (event) {
+			const jsonString = event.target.result;
+			const jsonArray = JSON.parse(jsonString);
+			currentColors = jsonArray;
+		};
+	
+		reader.readAsText(file);
+		console.log(reader);
+		currentColors = JSON.parse(reader.result)
+	}
+	input.click();
 }
 
 function switchColorSelector(x) {
@@ -669,4 +586,26 @@ function popUpSystems() {
 
 function closePopup() {
     document.getElementById("popup").style.display = "none";
+}
+
+function validateHsl() {
+	const h = document.getElementById('hue');
+	const s = document.getElementById('saturation');
+	const l = document.getElementById('lightness');
+	const w = document.getElementById('warning');
+	const wx = document.getElementById('warningContent');
+
+	if (s.value < 10) {
+		w.style.display = 'block';
+		wx.innerHTML = 'Za niska saturacja! Kolory będą bardzo podobne!'
+	} else if (l.value < 10) {
+		w.style.display = 'block';
+		wx.innerHTML = 'Za niska jasność! Kolory będą bardzo podobne!'
+	} else if (l.value > 90) {
+		w.style.display = 'block';
+		wx.innerHTML = 'Za wysoka jasność! Kolory będą bardzo podobne!'
+	} else {
+		w.style.display = 'none;'
+		wx.innerHTML = '';
+	}
 }

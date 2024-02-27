@@ -365,7 +365,7 @@ button {
 }
 
 #popup {
-	display: block;
+	display: none;
 	position: fixed;
 	z-index: 3;
 	left: 0;
@@ -382,4 +382,29 @@ button {
 	padding: 20px;
 	border: 1px solid #888;
 	width: 80%;
+}
+
+.xcolorbox {
+	margin-top: 4vh;
+	width: 4vw;
+	height: 4vw;
+}
+
+.xrx {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.xrx div {
+	flex: 0 0 33.333333%;
+}
+
+#warning {
+	width: 70vw;
+	margin: 0 15vw;
+	height: 5vh;
+}
+
+#warningContent {
+	height: 5vh;
 }

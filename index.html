@@ -12,7 +12,11 @@
         <h1>Kolory ZSE</h1>
         <p>Wybierz kolor, a otrzymasz perfekcyjne dopełnienia!</p>
         </div>
+        <input hidden type="file" id="fileInput" accept=".json">
         <button onclick="importJson()">Wczytaj swoją kompozycję...</button>
+    </div>
+    <div id="warning">
+        <p id="warningContent"></p>
     </div>
     <div class="ddr">
         <div class="ddt">
@@ -156,7 +160,7 @@
         <div id="popupContent">
             <h1>Twoje kolory w różnych systemach kolorów</h1>
             <div id="popcolors"></div>
-            <button onclick="importJson()">Zapisz te informacje</button>
+            <button onclick="exportJson()">Zapisz te informacje</button>
             <button onclick="closePopup()">Zamknij okienko</button>
         </div>
     </div>
