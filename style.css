@@ -408,3 +408,7 @@ button {
 #warningContent {
 	height: 5vh;
 }
+
+#clrs > div {
+	flex: 0 0 20%;
+}

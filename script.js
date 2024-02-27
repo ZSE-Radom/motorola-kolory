@@ -81,6 +81,7 @@ function updateApp() {
 
 // hsl color harmony calculator
 function getColorHarmonies(color) {
+	//every h value must be checked because i saw an incidents where it was out of 0-360 range
 	const hexToRgb = (hex) => hex.match(/\w\w/g).map((x) => parseInt(x, 16));
 	const rgbToHex = (r, g, b) =>
 		"#" +
@@ -91,8 +92,8 @@ function getColorHarmonies(color) {
 			})
 			.join("");
 
-	const [h, s, l] = htmlToHsl(color);
-	//allow user to change angle of the color wheel
+	let [h, s, l] = htmlToHsl(color); 
+	h = huePreCheck(h) 
 	const selected_angle = parseFloat(angle?.value) ?? 30;
 
 	const harmonies = [
@@ -106,48 +107,48 @@ function getColorHarmonies(color) {
 			name: "Analogiczny 🗿",
 			colors: [
 				hslToHtmlHsl([h, s, l]),
-				hslToHtmlHsl([h + selected_angle, s, l]),
-				hslToHtmlHsl([h - selected_angle, s, l]),
+				hslToHtmlHsl([huePreCheck(h + selected_angle), s, l]),
+				hslToHtmlHsl([huePreCheck(h - selected_angle), s, l]),
 			],
 		},
         {
 			name: "Analogiczny z dopełnieniem 🗿",
 			colors: [
 				hslToHtmlHsl([h, s, l]),
-				hslToHtmlHsl([h + selected_angle, s, l]),
-				hslToHtmlHsl([h - selected_angle, s, l]),
-                hslToHtmlHsl([h + 180, s, l]),
+				hslToHtmlHsl([huePreCheck(h + selected_angle), s, l]),
+				hslToHtmlHsl([huePreCheck(h - selected_angle), s, l]),
+                hslToHtmlHsl([huePreCheck(h + 180), s, l]),
 			],
 		},
 		{
 			name: "Kontrastowy",
 			colors: [
                 hslToHtmlHsl([h, s, l]),
-                hslToHtmlHsl([h + 180, s, l])],
+                hslToHtmlHsl([huePreCheck(h + 180), s, l])],
 		},
         {
             name: "Miękki kontrast 🗿",
             colors: [
                 hslToHtmlHsl([h, s, l]), 
-                hslToHtmlHsl([h + (180 + selected_angle), s, l]),
-                hslToHtmlHsl([h + (180 - selected_angle), s, l]),
+                hslToHtmlHsl([huePreCheck(h + (180 + selected_angle)), s, l]),
+                hslToHtmlHsl([huePreCheck(h + (180 - selected_angle)), s, l]),
             ],
         },
         {
             name: "Podwójny kontrast 🗿",
             colors: [
                 hslToHtmlHsl([h, s, l]),
-                hslToHtmlHsl([h + selected_angle, s, l]),
-                hslToHtmlHsl([h + 180, s, l]),
-                hslToHtmlHsl([h + (180 + selected_angle), s, l]),
+                hslToHtmlHsl([huePreCheck(h + selected_angle), s, l]),
+                hslToHtmlHsl([huePreCheck(h + 180), s, l]),
+                hslToHtmlHsl([huePreCheck(h + (180 + selected_angle)), s, l]),
             ],
         },
         {
             name: "Triada 🗿",
             colors: [
                 hslToHtmlHsl([h, s, l]),
-                hslToHtmlHsl([h + selected_angle, s, l]),
-                hslToHtmlHsl([h + (180 + selected_angle), s, l]),
+                hslToHtmlHsl([huePreCheck(h + selected_angle), s, l]),
+                hslToHtmlHsl([huePreCheck(h + (180 + selected_angle)), s, l]),
             ],
         },
 
@@ -248,12 +249,10 @@ function htmlToRgb(htmlCode) {
 }
 
 function rgbToCmy(rgb) {
-	// działa poprawnie (chyba)
 	return rgb.map((color) => 1 - color);
 }
 
 function rgbToCmyk(rgb) {
-	// działa poprawnie (chyba)
 	let cmy = rgbToCmy(rgb);
 	let k = Math.min(...cmy);
 	if (k === 1) return [0, 0, 0, 1];
@@ -261,7 +260,6 @@ function rgbToCmyk(rgb) {
 }
 
 function rgbToXyz(rgb) {
-	// nie działa poprawnie (chyba)
 	let r = rgb[0];
 	let g = rgb[1];
 	let b = rgb[2];
@@ -282,7 +280,6 @@ function rgbToXyz(rgb) {
 }
 
 function rgbToLab(rgb) {
-	// stestowane i o dziwo działa poprawnie (chyba)
 	let xyz = rgbToXyz(rgb);
 
 	let whiteX = 95.047;
@@ -305,7 +302,6 @@ function rgbToLab(rgb) {
 }
 
 function rgbToLuv(rgb) {
-	// jako tako działa (chyba)
 	let xyz = rgbToXyz(rgb);
 
 	let whiteX = 95.047;
@@ -328,7 +324,6 @@ function rgbToLuv(rgb) {
 }
 
 function rgbToYuv(rgb) {
-	// nie działa poprawnie (chyba)
 	let r = rgb[0];
 	let g = rgb[1];
 	let b = rgb[2];
@@ -341,7 +336,6 @@ function rgbToYuv(rgb) {
 }
 
 function rgbToYiq(rgb) {
-	// za ciemne
 	let r = rgb[0];
 	let g = rgb[1];
 	let b = rgb[2];
@@ -351,6 +345,53 @@ function rgbToYiq(rgb) {
 	let q = 21.1 * r - 52.3 * g + 31.2 * b;
 
 	return [y, i, q];
+}
+
+function rgbToNcs(rgb) {
+	let lab = rgbToLab(rgb);
+
+	let l = lab[0];
+	let a = lab[1];
+	let b = lab[2];
+
+	let h = Math.atan2(b, a) * 180 / Math.PI;
+	if (h < 0) h += 360;
+	let c = Math.sqrt(a * a + b * b);
+	let s = c / l * 100;
+	let n = 100 - s;
+  
+	let hues = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300, 310, 320, 330, 340, 350];
+	let hue = hues.reduce((prev, curr) => Math.abs(curr - h) < Math.abs(prev - h) ? curr : prev);
+  
+	let blacknesses = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95];
+	let blackness = blacknesses.reduce((prev, curr) => Math.abs(curr - n) < Math.abs(prev - n) ? curr : prev);
+  
+	let chromaticnesses = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85];
+	let chromaticness = chromaticnesses.reduce((prev, curr) => Math.abs(curr - s) < Math.abs(prev - s) ? curr : prev);
+  
+	return `S${blackness}${chromaticness}-${hue}`;
+}
+
+function rgbToRal(rgb) {
+	let r = rgb[0];
+	let g = rgb[1];
+	let b = rgb[2];
+}
+
+
+function rgbToCil(rgb) {
+	let r = rgb[0];
+	let g = rgb[1];
+	let b = rgb[2];
+
+
+}
+
+function rgbToFreetone(rgb) {
+	let r = rgb[0];
+	let g = rgb[1];
+	let b = rgb[2];
+
 }
 
 function updateColorType(color, prm = "rgb") {
@@ -372,6 +413,7 @@ function updateColorType(color, prm = "rgb") {
 	let luv = rgbToLuv(rgb);
 	let yuv = rgbToYuv(rgb);
 	let yiq = rgbToYiq(rgb);
+	let ncs = rgbToNcs(rgb);
 
     let y =  `
 	<div class="clr_system">
@@ -400,19 +442,19 @@ function updateColorType(color, prm = "rgb") {
         <p>K: ${(cmyk[3] * 100).toFixed(2)}%</p>
     </div>
     <div class="clr_system">
-        <h3>XYZ</h3>
+        <h3>CIEXYZ</h3>
         <p>X: ${xyz[0].toFixed(2)}</p>
         <p>Y: ${xyz[1].toFixed(2)}</p>
         <p>Z: ${xyz[2].toFixed(2)}</p>
     </div>
     <div class="clr_system">
-        <h3>LAB</h3>
+        <h3>CIELAB</h3>
         <p>L: ${lab[0].toFixed(2)}</p>
         <p>A: ${lab[1].toFixed(2)}</p>
         <p>B: ${lab[2].toFixed(2)}</p>
     </div>
     <div class="clr_system">
-        <h3>LUV</h3>
+        <h3>CIELUV</h3>
         <p>L: ${luv[0].toFixed(2)}</p>
         <p>U: ${luv[1].toFixed(2)}</p>
         <p>V: ${luv[2].toFixed(2)}</p>
@@ -429,27 +471,32 @@ function updateColorType(color, prm = "rgb") {
         <p>I: ${yiq[1].toFixed(2)}</p>
         <p>Q: ${yiq[2].toFixed(2)}</p>
     </div>
+	<div class="clr_system">
+		<h3>NCS</h3>
+		<p>${ncs}</p>
+	</div>
     `;
+
+	exportColors.push({'color': {
+		'rgb': [rgb[0] * 255, rgb[1] * 255, rgb[2] * 255],
+		'hsl': [hsl[0], hsl[1], hsl[2]],
+		'cmy': [cmy[0], cmy[1], cmy[2]],
+		'cmyk': [cmyk[0], cmyk[1], cmyk[2], cmyk[3]],
+		'xyz': [xyz[0], xyz[1], xyz[2]],
+		'lab': [lab[0], lab[1], lab[2]],
+		'luv': [luv[0], luv[1], luv[2]],
+		'yuv': [yuv[0], yuv[1], yuv[2]],
+		'yiq': [yiq[0], yiq[1], yiq[2]],
+		'ncs': ncs,
+	}});
 
     if (prm === "rgb") {
         x = document.getElementById("clrs");
         x.innerHTML = y;
-		exportColors.push({'color': {
-			'rgb': [rgb[0] * 255, rgb[1] * 255, rgb[2] * 255],
-			'hsl': [hsl[0], hsl[1], hsl[2]],
-			//wkleić
-		}})
     } else if (prm === "hsl") {
         x = document.getElementById("popcolors");
         x.innerHTML += `<div><div class="xcolorbox" style="background-color: rgb(${rgb[0] * 255}, ${rgb[1] * 255}, ${rgb[2] * 255})"></div><div class="xrx">` + y + `</div></div>`;
-		exportColors.push({'color': {
-			'rgb': [rgb[0] * 255, rgb[1] * 255, rgb[2] * 255],
-			'hsl': [hsl[0], hsl[1], hsl[2]],
-			//wkleić
-		}})
-    } else {
-
-	}
+    }
 
 	hue.value = hsl[0];
 	saturation.value = hsl[1];
@@ -509,24 +556,24 @@ function exportJson() {
 }
 
 function importJson() {
-	var input = document.createElement('input');
-	input.type = 'file';
+    var input = document.createElement('input');
+    input.type = 'file';
 
-	input.onchange = e => { 
-		const file = e.target.files[0]; 
-		const reader = new FileReader();
+    input.onchange = e => { 
+        const file = e.target.files[0]; 
+        const reader = new FileReader();
 
-		reader.onload = function (event) {
-			const jsonString = event.target.result;
-			const jsonArray = JSON.parse(jsonString);
-			currentColors = jsonArray;
-		};
-	
-		reader.readAsText(file);
-		console.log(reader);
-		currentColors = JSON.parse(reader.result)
-	}
-	input.click();
+        reader.onload = function (event) {
+            const jsonString = event.target.result;
+            const jsonArray = JSON.parse(jsonString);
+            currentColors = jsonArray;
+            console.log(currentColors);
+			colorInput.value = `#${Math.round(currentColors[0][0]).toString(16)}${Math.round(currentColors[0][1]).toString(16)}${Math.round(currentColors[0][2]).toString(16)}`;
+        };
+    
+        reader.readAsText(file);
+    }
+    input.click();
 }
 
 function switchColorSelector(x) {
@@ -560,6 +607,13 @@ function buttonChange(x) {
 		r.style.display = "block";
 		r.textContent = "Podglądy";
 		r.addEventListener("click", () => {
+			if (currentColors.length > 0) {
+				document.getElementById('tohide').style.display = "none";
+				document.getElementById('toshow').style.display = "block";
+			} else {
+				document.getElementById('tohide').style.display = "block";
+				document.getElementById('toshow').style.display = "none";
+			}
 			switchCard("preview");
 			buttonChange(3);
 		});
@@ -608,4 +662,13 @@ function validateHsl() {
 		w.style.display = 'none;'
 		wx.innerHTML = '';
 	}
+}
+
+function huePreCheck(h) {
+	if (h > 360) {
+		h = h - 360;
+	} else if (h < 0) {
+		h = h + 360;
+	}
+	return h;
 }
