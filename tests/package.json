@@ -1,0 +1,14 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Testing script for Kolory-ZSE project.",
+  "main": "index.js",
+  "repository": "https://github.com/ZSE-Radom/motorola-kolory/",
+  "author": "Dawid \"MinerPL\" Jaworski (https://minerpl.xyz; contact@minerpl.xyz)",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "playwright": "^1.42.0"
+  }
+}
