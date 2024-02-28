@@ -21,9 +21,10 @@ body {
 #left {
 	width: 80vw;
 	margin: 0 15vw;
-	padding-bottom: 400px;
+	padding-bottom: 3vw;
 	overflow-x: hidden;
-  	overflow-y: scroll;
+	overflow-y: scroll;
+	height: 75vh;
 }
 
 #right {
