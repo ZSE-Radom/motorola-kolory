@@ -30,11 +30,18 @@
         <div id="left" class="card">
             <div id="centered">
             <h2>Podstawowy kolor</h2>
+            <p>Wybierz wartości w systemie HSL</p>
             <div id="colorPicker" class="c1">
                 <input class='s' type="range" id="hue" min="1" max="359">
                 <input class='s' type="range" id="saturation" min="1" max="99">
                 <input class='s' type="range" id="lightness" min="1" max="99">
             </div>
+            <div style="display: flex; justify-content: center;">
+                <p class="fdf">Barwa</p>
+                <p class="fdf">Nasycenie</p>
+                <p class="fdf">Jasność</p>
+            </div>
+            <p style="padding-top: 30px;">Lub wybierz predefiniowany kolor</p>
             <div class="c2 primiry-color-examples-container">
                 <div onclick="updateApp('#ff0000')" style="background-color: #ff0000;" class="primiry-color-examples"></div>
                 <div onclick="updateApp('#008000')" style="background-color: #008000;" class="primiry-color-examples"></div>
@@ -45,6 +52,7 @@
                 <div onclick="updateApp('#a52a2a')" style="background-color: #a52a2a;" class="primiry-color-examples"></div>
                 <div onclick="updateApp('#5c2e19')" style="background-color: #5c2e19;" class="primiry-color-examples"></div>
             </div>
+            <p style="padding-top: 30px;">Możesz również użyć wbudowanego color pickera</p>
             <input type="color" id="colorInput" class="c2">
             </div>
             <div id="systems">
@@ -72,7 +80,7 @@
                     <h1>Podgląd</h1>
                     <button onclick="exportJson()">Eksport</button>
                 </div>
-                <div>
+                <div style="display:flex; flex-direction: column; align-items: center; justify-content: center;">
                     <p>Obrazy wektorowe</p>
                     <div id="vectorIcons" class="pr">
                         <svg class="dd" viewBox="0 0 20 20">
@@ -176,6 +184,7 @@
             <button onclick="closePopup()">Zamknij okienko</button>
         </div>
     </div>
+    <script src='./assets/RalCodes.js'></script>
     <script src="script.js"></script>
 </body>
 </html>

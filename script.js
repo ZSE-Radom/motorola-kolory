@@ -19,12 +19,12 @@ lightness.addEventListener("input", updateHsl);
 function updateApp(x) {
 	let selectedColor;
 
-	if (typeof x === 'string') {
-		selectedColor = x;
-		colorInput.value = x;
-	}
+	if(typeof x === 'string'){
+		selectedColor = x; 
+		colorInput.value =x;
+	} 
 	else selectedColor = colorInput.value;
-
+	
 	validateHsl()
 
 	updateColorType(selectedColor);
@@ -88,18 +88,19 @@ function updateApp(x) {
 	});
 }
 
+const hexToRgb = (hex) => hex.match(/\w\w/g).map((x) => parseInt(x, 16));
+const rgbToHex = (r, g, b) =>
+	"#" +
+	[r, g, b]
+		.map((x) => {
+			const hex = (x || '0').toString(16);
+			return hex.length === 1 ? "0" + hex : hex;
+		})
+		.join("");
+
 // hsl color harmony calculator
 function getColorHarmonies(color) {
-	//every h value must be checked because i saw an incidents where it was out of 0-360 range
-	const hexToRgb = (hex) => hex.match(/\w\w/g).map((x) => parseInt(x, 16));
-	const rgbToHex = (r, g, b) =>
-		"#" +
-		[r, g, b]
-			.map((x) => {
-				const hex = x.toString(16);
-				return hex.length === 1 ? "0" + hex : hex;
-			})
-			.join("");
+
 
 	let [h, s, l] = htmlToHsl(color); 
 	h = huePreCheck(h) 
@@ -178,7 +179,6 @@ function hslToHtml(hsl) {
 	let h = hsl[0] / 360;
 	let s = hsl[1] / 100;
 	let l = hsl[2] / 100;
-    console.log(hsl)
 	const k = (n) => (n + h / 30) % 12;
 	const a = s * Math.min(l, 1 - l);
 	const f = (n) => l - a * Math.max(Math.min(k(n) - 3, 9 - k(n), 1), -1);
@@ -408,7 +408,6 @@ function updateColorType(color, prm = "rgb") {
 
     if (prm === "hsl") {    
         color = [color[0]/360, color[1], color[2]];
-        console.log(color)
         color = hslToHtmlX([color[0], color[1], color[2]]);
     }
     
@@ -423,6 +422,8 @@ function updateColorType(color, prm = "rgb") {
 	let yuv = rgbToYuv(rgb);
 	let yiq = rgbToYiq(rgb);
 	let ncs = rgbToNcs(rgb);
+
+	let ral = findClosestColor(rgb)
 
     let y =  `
 	<div class="clr_system">
@@ -484,6 +485,15 @@ function updateColorType(color, prm = "rgb") {
 		<h3>NCS</h3>
 		<p>${ncs}</p>
 	</div>
+	<div class="clr_system">
+		<h3>RAL (Nazwa)</h3>
+		<p>${ral.name}</p>
+	</div>
+	<div class="clr_system">
+	<h3>RAL (Kod)</h3>
+	<p>${ral.code}</p>
+	</div>
+
     `;
 
 	exportColors.push({'color': {
@@ -507,15 +517,19 @@ function updateColorType(color, prm = "rgb") {
         x.innerHTML += `<div><div class="xcolorbox" style="background-color: rgb(${rgb[0] * 255}, ${rgb[1] * 255}, ${rgb[2] * 255})"></div><div class="xrx">` + y + `</div></div>`;
     }
 
-	hue.value = hsl[0];
-	saturation.value = hsl[1];
+	hue.value = hsl[0] || hue.value;;
+	saturation.value = hsl[1] || saturation.value;
 	lightness.value = hsl[2];
 }
 
-function updateHsl() {
+function updateHsl(e) {
+	e.preventDefault();
 	let h = hue.value;
 	let s = saturation.value;
 	let l = lightness.value;
+
+	if (l < 1) l = 1
+
 	let x = hslToHtml([h * 360, s, l]);
 	colorInput.value = `#${Math.round(x[0]).toString(16)}${Math.round(
 		x[1]
@@ -576,8 +590,8 @@ function importJson() {
 			const jsonString = event.target.result;
 			const jsonArray = JSON.parse(jsonString);
 			currentColors = jsonArray;
-            console.log(currentColors);
-			colorInput.value = `#${Math.round(currentColors[0][0]).toString(16)}${Math.round(currentColors[0][1]).toString(16)}${Math.round(currentColors[0][2]).toString(16)}`;
+			const firstColor = currentColors[0]['color']['rgb'];
+			updateApp(rgbToHex(firstColor[0], firstColor[1], firstColor[2]));
 		};
 	
 		reader.readAsText(file);
@@ -678,3 +692,31 @@ function huePreCheck(h) {
 	}
 	return h;
 }
+
+function rgbDistance(color1, color2) {
+    return Math.sqrt(
+        Math.pow(color1[0] - color2[0], 2) +
+        Math.pow(color1[1] - color2[1], 2) +
+        Math.pow(color1[2] - color2[2], 2)
+    );
+}
+
+function findClosestColor(rgb) {
+    try {
+		rgb = rgb.map(x => x * 255);
+        let closestColor = null;
+        let minDistance = Infinity;
+        for (const color of Object.values(ral)) {
+            const distance = rgbDistance(rgb, color.rgb.split('-').map(Number));
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestColor = color;
+            }
+        }
+
+        return closestColor;
+    } catch (error) {
+        console.error('Error finding closest color:', error);
+    }
+}
+

@@ -21,6 +21,9 @@ body {
 #left {
 	width: 80vw;
 	margin: 0 15vw;
+	padding-bottom: 400px;
+	overflow-x: hidden;
+  	overflow-y: scroll;
 }
 
 #right {
@@ -143,6 +146,7 @@ button:hover {
 	background-color: #e2d5ed;
 	color: #7a5698;
 	padding-bottom: 250px;
+	justify-content: center;
 }
 
 #mainApp {
@@ -447,4 +451,8 @@ button:hover {
 
 #clrs > div {
 	flex: 0 0 20%;
+}
+
+.fdf {
+	width: 168px;
 }
