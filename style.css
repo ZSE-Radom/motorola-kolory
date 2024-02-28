@@ -96,10 +96,14 @@ button {
 	font-family: "MPLUSRounded1c", sans-serif;
 	color: #e2d5ed;
 	background-color: #7a5698;
-	padding: 10px 24px;
+	padding: 1vh 2vw;
 	cursor: pointer;
 	border: 1px solid #e2d5ed;
 	border-radius: 10px;
+}
+button:hover {
+	background-color: #7a5698bb;
+	transition: 500ms;
 }
 
 .btn-group button {
@@ -208,7 +212,7 @@ button {
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
 	border-left: none;
-	font-size: 2.5rem;
+	font-size: 1.5vw;
 	display: none;
 }
 
@@ -217,7 +221,7 @@ button {
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
 	border-right: none;
-	font-size: 2.5rem;
+	font-size: 1.5vw;
 }
 
 .s {
@@ -318,7 +322,7 @@ button {
 }
 
 #website .cs2{
-	color: var(--color2);
+	color: var(--color4);
 }
 
 #slideshow{

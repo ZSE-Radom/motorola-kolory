@@ -17,15 +17,14 @@ saturation.addEventListener("input", updateHsl);
 lightness.addEventListener("input", updateHsl);
 
 function updateApp(x) {
+	let selectedColor;
 
- 	let selectedColor = ''
-	
- 	if (typeof(x) == 'object'){
- 		selectedColor = colorInput.value;
- 	} else {
- 		selectedColor = x;
- 	}
-	
+	if (typeof x === 'string') {
+		selectedColor = x;
+		colorInput.value = x;
+	}
+	else selectedColor = colorInput.value;
+
 	validateHsl()
 
 	updateColorType(selectedColor);
@@ -69,6 +68,8 @@ function updateApp(x) {
 		harmonyPreviewButton.addEventListener("click", () => {
 			preview.style.display = "visible";
 			currentColors = harmony.colors;
+			switchCard('preview');
+			buttonChange(3);
 			previewsRefresh();
 		});
 
@@ -586,15 +587,9 @@ function importJson() {
 	input.click();
 }
 function switchColorSelector(x) {
-	if (x.id == "xxu1") {
-		document.getElementsByClassName("c1")[0].style.display = "block";
-		document.getElementsByClassName("c2")[0].style.display = "none";
-		document.getElementsByClassName("c2")[1].style.display = "none";
-	} else {
-		document.getElementsByClassName("c1")[0].style.display = "none";
-		document.getElementsByClassName("c2")[0].style.display = "flex";
-		document.getElementsByClassName("c2")[1].style.display = "block";
-	}
+	document.getElementsByClassName("c1")[0].style.display = "block";
+	document.getElementsByClassName("c2")[0].style.display = "flex";
+	document.getElementsByClassName("c2")[1].style.display = "block";
 }
 
 function buttonChange(x) {
@@ -615,7 +610,7 @@ function buttonChange(x) {
 			switchCard("left");
 			buttonChange(1);
 		});
-		r.style.display = "block";
+		r.style.display = "none";
 		r.textContent = "Podglądy";
 		r.addEventListener("click", () => {
 			if (currentColors.length > 0) {
