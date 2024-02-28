@@ -68,6 +68,7 @@ function updateApp(x) {
 		harmonyPreviewButton.addEventListener("click", () => {
 			preview.style.display = "visible";
 			currentColors = harmony.colors;
+			console.log(harmony.colors)
 			switchCard('preview');
 			buttonChange(3);
 			previewsRefresh();
@@ -517,7 +518,7 @@ function updateColorType(color, prm = "rgb") {
         x.innerHTML += `<div><div class="xcolorbox" style="background-color: rgb(${rgb[0] * 255}, ${rgb[1] * 255}, ${rgb[2] * 255})"></div><div class="xrx">` + y + `</div></div>`;
     }
 
-	hue.value = hsl[0] || hue.value;;
+	hue.value = hsl[0] || hue.value;
 	saturation.value = hsl[1] || saturation.value;
 	lightness.value = hsl[2];
 }
@@ -566,7 +567,7 @@ function previewsRefresh() {
 }
 
 function exportJson() {
-	const json = JSON.stringify(exportColors);
+	const json = JSON.stringify(exportColors, null, 2);
 	const blob = new Blob([json], { type: "application/json" });
 	const a = document.createElement("a");
 	a.style.display = "none";
@@ -587,11 +588,14 @@ function importJson() {
 		const reader = new FileReader();
 
 		reader.onload = function (event) {
-			const jsonString = event.target.result;
-			const jsonArray = JSON.parse(jsonString);
-			currentColors = jsonArray;
-			const firstColor = currentColors[0]['color']['rgb'];
+			const json = JSON.parse(event.target.result);
+			const firstColor = json[0]['color']['rgb'];
 			updateApp(rgbToHex(firstColor[0], firstColor[1], firstColor[2]));
+			preview.style.display = "visible";
+			currentColors = json.map(j => j.color.hsl);
+			switchCard('preview');
+			buttonChange(3);
+			previewsRefresh();
 		};
 	
 		reader.readAsText(file);
@@ -653,6 +657,7 @@ function popUpSystems() {
     document.getElementById("popup").style.display = "block";
     const popupContent = document.getElementById("popcolors");
     popupContent.innerHTML = "";
+	exportColors = [];
     for (const color in colors) {
         updateColorType([colors[color][0] * 360, colors[color][1], colors[color][2]], "hsl");
     }
