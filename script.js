@@ -107,13 +107,13 @@ function getColorHarmonies(color) {
 	h = huePreCheck(h) 
 	const selected_angle = parseFloat(angle?.value) ?? 30;
 
-	const harmonies = [
-        {
-            name: "Monochromatyczny",
-            colors: [
-                hslToHtmlHsl([h, s, l]),
-            ],
-        },
+	return [
+		{
+			name: "Monochromatyczny",
+			colors: [
+				hslToHtmlHsl([h, s, l]),
+			],
+		},
 		{
 			name: "Analogiczny 🗿",
 			colors: [
@@ -122,49 +122,48 @@ function getColorHarmonies(color) {
 				hslToHtmlHsl([huePreCheck(h - selected_angle), s, l]),
 			],
 		},
-        {
+		{
 			name: "Analogiczny z dopełnieniem 🗿",
 			colors: [
 				hslToHtmlHsl([h, s, l]),
 				hslToHtmlHsl([huePreCheck(h + selected_angle), s, l]),
 				hslToHtmlHsl([huePreCheck(h - selected_angle), s, l]),
-                hslToHtmlHsl([huePreCheck(h + 180), s, l]),
+				hslToHtmlHsl([huePreCheck(h + 180), s, l]),
 			],
 		},
 		{
 			name: "Kontrastowy",
 			colors: [
-                hslToHtmlHsl([h, s, l]),
-                hslToHtmlHsl([huePreCheck(h + 180), s, l])],
+				hslToHtmlHsl([h, s, l]),
+				hslToHtmlHsl([huePreCheck(h + 180), s, l])],
 		},
-        {
-            name: "Miękki kontrast 🗿",
-            colors: [
-                hslToHtmlHsl([h, s, l]), 
-                hslToHtmlHsl([huePreCheck(h + (180 + selected_angle)), s, l]),
-                hslToHtmlHsl([huePreCheck(h + (180 - selected_angle)), s, l]),
-            ],
-        },
-        {
-            name: "Podwójny kontrast 🗿",
-            colors: [
-                hslToHtmlHsl([h, s, l]),
-                hslToHtmlHsl([huePreCheck(h + selected_angle), s, l]),
-                hslToHtmlHsl([huePreCheck(h + 180), s, l]),
-                hslToHtmlHsl([huePreCheck(h + (180 + selected_angle)), s, l]),
-            ],
-        },
-        {
-            name: "Triada 🗿",
-            colors: [
-                hslToHtmlHsl([h, s, l]),
-                hslToHtmlHsl([huePreCheck(h + selected_angle), s, l]),
-                hslToHtmlHsl([huePreCheck(h + (180 + selected_angle)), s, l]),
-            ],
-        },
+		{
+			name: "Miękki kontrast 🗿",
+			colors: [
+				hslToHtmlHsl([h, s, l]),
+				hslToHtmlHsl([huePreCheck(h + (180 + selected_angle)), s, l]),
+				hslToHtmlHsl([huePreCheck(h + (180 - selected_angle)), s, l]),
+			],
+		},
+		{
+			name: "Podwójny kontrast 🗿",
+			colors: [
+				hslToHtmlHsl([h, s, l]),
+				hslToHtmlHsl([huePreCheck(h + selected_angle), s, l]),
+				hslToHtmlHsl([huePreCheck(h + 180), s, l]),
+				hslToHtmlHsl([huePreCheck(h + (180 + selected_angle)), s, l]),
+			],
+		},
+		{
+			name: "Triada 🗿",
+			colors: [
+				hslToHtmlHsl([h, s, l]),
+				hslToHtmlHsl([huePreCheck(h + selected_angle), s, l]),
+				hslToHtmlHsl([huePreCheck(h + (180 + selected_angle)), s, l]),
+			],
+		},
 
 	];
-	return harmonies;
 }
 
 /* konwersja typu koloru */
@@ -228,7 +227,7 @@ function htmlToHsl(htmlCode) {
 	let max = Math.max(r, g, b);
 	let min = Math.min(r, g, b);
 	let h = (max + min) / 2;
-	let s = (max + min) / 2;
+	let s;
 	let l = (max + min) / 2;
 	if (max === min) {
 		h = s = 0;
@@ -380,28 +379,6 @@ function rgbToNcs(rgb) {
 	let chromaticness = chromaticnesses.reduce((prev, curr) => Math.abs(curr - s) < Math.abs(prev - s) ? curr : prev);
   
 	return `S${blackness}${chromaticness}-${hue}`;
-}
-
-function rgbToRal(rgb) {
-	let r = rgb[0];
-	let g = rgb[1];
-	let b = rgb[2];
-}
-
-
-function rgbToCil(rgb) {
-	let r = rgb[0];
-	let g = rgb[1];
-	let b = rgb[2];
-
-
-}
-
-function rgbToFreetone(rgb) {
-	let r = rgb[0];
-	let g = rgb[1];
-	let b = rgb[2];
-
 }
 
 function updateColorType(color, prm = "rgb") {
@@ -604,7 +581,7 @@ function importJson() {
 	}
 	input.click();
 }
-function switchColorSelector(x) {
+function switchColorSelector() {
 	document.getElementsByClassName("c1")[0].style.display = "block";
 	document.getElementsByClassName("c2")[0].style.display = "flex";
 	document.getElementsByClassName("c2")[1].style.display = "block";
@@ -668,7 +645,6 @@ function closePopup() {
 }
 
 function validateHsl() {
-	const h = document.getElementById('hue');
 	const s = document.getElementById('saturation');
 	const l = document.getElementById('lightness');
 	const w = document.getElementById('warning');
